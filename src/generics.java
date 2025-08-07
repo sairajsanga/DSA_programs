@@ -58,7 +58,7 @@ public abstract  class generics<T> {
 //        g.remove(5);
 //        System.out.println(g);
         System.out.println(s.sum(5,4));
-
+        System.out.println(s.sum(1,2));
     }
 }
 
