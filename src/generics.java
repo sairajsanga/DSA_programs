@@ -1,5 +1,6 @@
 import java.util.Arrays;
 
+
 public abstract  class generics<T> {
 
     private static int size;
