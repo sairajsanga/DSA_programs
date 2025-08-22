@@ -3,7 +3,7 @@ import java.util.LinkedList;
 import java.util.List;
 import java.util.Queue;
 
-public class Solution {
+public class FirstNegSub {
     public static void main(String[] args) {
         int arr[]={-8,2,3,-6,10};
         int k=2;
@@ -35,10 +35,8 @@ public class Solution {
                 }
                 i++;
                 j++;
-
             }
         }
         return l;
-
     }
 }
