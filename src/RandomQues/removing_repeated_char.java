@@ -1,3 +1,5 @@
+package RandomQues;
+
 import java.util.Scanner;
 
 public class removing_repeated_char {

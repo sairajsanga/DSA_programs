@@ -1,3 +1,5 @@
+package RandomQues;
+
 import java.util.*;
 
 public class JobProfitMaximizer {

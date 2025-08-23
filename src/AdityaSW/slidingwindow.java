@@ -1,3 +1,5 @@
+package AdityaSW;
+
 public class slidingwindow {
     public static void main(String[] args) {
 //        int arr[]={6,2,4,3,1,7};

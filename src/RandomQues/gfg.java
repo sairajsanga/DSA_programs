@@ -1,3 +1,5 @@
+package RandomQues;
+
 class NodeL {
     int data;
     NodeL next;
