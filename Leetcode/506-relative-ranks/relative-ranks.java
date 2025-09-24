@@ -24,7 +24,7 @@ class Solution {
           }
           else{
              int index=q.poll()[1];
-             res[index]=Integer.toString(i+1);
+             res[index]=Integer.toString(count);
              count++;
           }
        }
