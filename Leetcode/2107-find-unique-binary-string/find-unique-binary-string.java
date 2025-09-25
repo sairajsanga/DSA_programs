@@ -17,6 +17,9 @@ class Solution {
                 res=""+str;
                 return;
             }
+            else{
+               return;
+            }  
         }
         helper(nums,str+'1',set);
         helper(nums,str+'0',set);
