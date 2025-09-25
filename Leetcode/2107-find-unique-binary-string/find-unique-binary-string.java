@@ -15,6 +15,7 @@ class Solution {
         if(str.length()==nums.length){
             if(!set.contains(str)){
                 res=""+str;
+                return;
             }
             else{
                return;
