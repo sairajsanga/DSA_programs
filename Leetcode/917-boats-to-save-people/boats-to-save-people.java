@@ -5,11 +5,15 @@ class Solution {
         int j=people.length-1;
         int boats=0;
         while(i<=j){
-           if(people[i]+people[j]<=limit){  
+           if(people[i]+people[j]<=limit){
+                boats++;
                 i++;
+                j--;
            }
-           boats++;
-           j--;
+           else{
+            boats++;
+            j--;
+           }
         }
         return boats;
     }
