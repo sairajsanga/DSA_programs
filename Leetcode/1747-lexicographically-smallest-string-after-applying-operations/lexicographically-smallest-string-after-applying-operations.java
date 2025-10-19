@@ -8,16 +8,23 @@ class Solution {
 
         while (!q.isEmpty()) {
             String cur = q.poll();
-            if (cur.compareTo(smallest) < 0) smallest = cur;
+            if (cur.compareTo(smallest) < 0)
+                smallest = cur;
 
-            StringBuilder sb = new StringBuilder(cur);
-            for (int i = 1; i < sb.length(); i += 2)
-                sb.setCharAt(i, (char) ((sb.charAt(i) - '0' + a) % 10 + '0'));
-            String added = sb.toString();
-            if (vis.add(added)) q.offer(added);
+            char arr[] = cur.toCharArray();
+            int n = arr.length;
+            for (int i = 1; i < n; i += 2) {
+                int num = (arr[i] - '0');
+                num = (num + a) % 10;
+                arr[i] = (char) (num + '0');
+            }
+            String added = new String(arr);
+            if (vis.add(added))
+                q.offer(added);
 
             String rotated = cur.substring(cur.length() - b) + cur.substring(0, cur.length() - b);
-            if (vis.add(rotated)) q.offer(rotated);
+            if (vis.add(rotated))
+                q.offer(rotated);
         }
         return smallest;
     }
