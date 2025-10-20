@@ -1,16 +1,16 @@
 class Solution {
     public int minOperations(String s) {
-        HashSet<Character> set=new HashSet<>();
-        for(char ch:s.toCharArray()){
-            set.add(ch);
+        boolean[] freq = new boolean[26];
+        for(char ch : s.toCharArray()) {
+            freq[ch - 'a'] = true;
         }
-        int max=0;
-        for(char ch:set){
-            int step=(26-(ch-'a'))%26;
-            if(step>max){
-                max=step;
+        int count = 0;
+        for(int i = 1; i < 25; i++) {
+            if(freq[i]) {
+                freq[i + 1] = freq[i];
+                count++;
             }
         }
-        return max;
+        return (freq[25])? count + 1 : count;
     }
 }
