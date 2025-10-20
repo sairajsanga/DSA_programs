@@ -1,7 +1,6 @@
 class Solution {
     public int minOperations(String s) {
         HashSet<Character> set=new HashSet<>();
-        int count[]=new int[26];
         for(char ch:s.toCharArray()){
             set.add(ch);
         }
