@@ -8,10 +8,6 @@ class Solution {
         for (int v : nums){
             original[v]++;
         }
-        if(numOps==0){
-           int fastmax = Arrays.stream(original).max().getAsInt();
-           return fastmax;
-        }
         for(int i=0;i<nums.length;i++){
             int ele=nums[i];
             int start=ele-k;
