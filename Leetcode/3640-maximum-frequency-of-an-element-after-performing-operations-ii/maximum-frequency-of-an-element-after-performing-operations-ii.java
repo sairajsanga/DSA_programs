@@ -1,78 +1,35 @@
 class Solution {
-
     public int maxFrequency(int[] nums, int k, int numOperations) {
-        Arrays.sort(nums);
-        int ans = 0;
-        Map<Integer, Integer> numCount = new HashMap<>();
-        Set<Integer> modes = new TreeSet<>();
-
-        Consumer<Integer> addMode = value -> {
-            modes.add(value);
-            if (value - k >= nums[0]) {
-                modes.add(value - k);
-            }
-            if (value + k <= nums[nums.length - 1]) {
-                modes.add(value + k);
-            }
-        };
-
-        int lastNumIndex = 0;
-        for (int i = 0; i < nums.length; ++i) {
-            if (nums[i] != nums[lastNumIndex]) {
-                numCount.put(nums[lastNumIndex], i - lastNumIndex);
-                ans = Math.max(ans, i - lastNumIndex);
-                addMode.accept(nums[lastNumIndex]);
-                lastNumIndex = i;
-            }
+       int n=nums.length;
+       Map<Integer,Integer> map=new TreeMap<>();
+       HashMap<Integer,Integer> freq=new HashMap<>();
+       for(int ele:nums){
+          freq.put(ele,freq.getOrDefault(ele,0)+1);
+       }
+       for(int i=0;i<n;i++){
+        map.put(nums[i],0);
+       }
+       for(int i=0;i<n;i++){
+          int ele=nums[i];
+          int start=(nums[i]-k<0)?0:nums[i]-k;
+          int end=nums[i]+k;
+          map.put(start,map.getOrDefault(start,0)+1);
+          map.put(end+1,map.getOrDefault(end+1,0)-1);
+       }
+       int curr = 0;
+       for (Map.Entry<Integer, Integer> entry : map.entrySet()) {
+           curr += entry.getValue(); // add diff to running total
+           map.put(entry.getKey(), curr); // store cumulative freq
         }
-
-        numCount.put(nums[lastNumIndex], nums.length - lastNumIndex);
-        ans = Math.max(ans, nums.length - lastNumIndex);
-        addMode.accept(nums[lastNumIndex]);
-
-        IntUnaryOperator leftBound = value -> {
-            int left = 0;
-            int right = nums.length - 1;
-            while (left < right) {
-                int mid = (left + right) / 2;
-                if (nums[mid] < value) {
-                    left = mid + 1;
-                } else {
-                    right = mid;
-                }
-            }
-            return left;
-        };
-
-        IntUnaryOperator rightBound = value -> {
-            int left = 0;
-            int right = nums.length - 1;
-            while (left < right) {
-                int mid = (left + right + 1) / 2;
-                if (nums[mid] > value) {
-                    right = mid - 1;
-                } else {
-                    left = mid;
-                }
-            }
-            return left;
-        };
-
-        for (int mode : modes) {
-            int l = leftBound.applyAsInt(mode - k);
-            int r = rightBound.applyAsInt(mode + k);
-            int tempAns;
-            if (numCount.containsKey(mode)) {
-                tempAns = Math.min(
-                    r - l + 1,
-                    numCount.get(mode) + numOperations
-                );
-            } else {
-                tempAns = Math.min(r - l + 1, numOperations);
-            }
-            ans = Math.max(ans, tempAns);
+      int max=0;
+      for(Map.Entry<Integer,Integer> entry:map.entrySet()){
+        int key=entry.getKey();
+        int val=entry.getValue();
+        if(val>0){
+            int operations=Math.min(val-freq.getOrDefault(key,0),numOperations);
+            max=Math.max(max,operations+freq.getOrDefault(key,0));
         }
-
-        return ans;
+      }
+      return max;
     }
 }
