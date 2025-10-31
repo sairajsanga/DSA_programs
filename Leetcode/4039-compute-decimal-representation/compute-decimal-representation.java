@@ -13,23 +13,24 @@ class Solution {
          count++;
          temp/=10;
        }
+       Collections.reverse(list);
        int res[]=new int[list.size()];
        int idx=0;
        for(int ele:list){
           res[idx++]=ele;
        }
-       reverse(res);
+    //    reverse(res);
        return res;
     }
-    public void reverse(int arr[]){
-        int i=0;
-        int j=arr.length-1;
-        while(i<=j){
-            int temp=arr[i];
-            arr[i]=arr[j];
-            arr[j]=temp;
-            i++;
-            j--;
-        }
-    }
+    // public void reverse(int arr[]){
+    //     int i=0;
+    //     int j=arr.length-1;
+    //     while(i<=j){
+    //         int temp=arr[i];
+    //         arr[i]=arr[j];
+    //         arr[j]=temp;
+    //         i++;
+    //         j--;
+    //     }
+    // }
 }
