@@ -1,6 +1,11 @@
 package codeVita;
 
-import java.util.*;
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
+import java.util.Objects;
+import java.util.Scanner;
 
 public class MainF {
 
@@ -10,247 +15,65 @@ public class MainF {
         double x, y;
 
         Point(double x, double y) {
-            this.x = x;
-            this.y = y;
+            this.x = round(x);
+            this.y = round(y);
         }
 
-        static Point create(double x, double y) {
-            double roundedX = Math.round(x * 100.0) / 100.0;
-            double roundedY = Math.round(y * 100.0) / 100.0;
-            return new Point(roundedX, roundedY);
+        private double round(double val) {
+            return Math.round(val * 100.0) / 100.0;
         }
 
         @Override
-        public boolean equals(Object obj) {
-            if (this == obj) return true;
-            if (obj == null || getClass() != obj.getClass()) return false;
-            Point point = (Point) obj;
+        public boolean equals(Object o) {
+            if (this == o) return true;
+            if (o == null || getClass() != o.getClass()) return false;
+            Point point = (Point) o;
             return Math.abs(point.x - x) < EPS && Math.abs(point.y - y) < EPS;
         }
 
         @Override
         public int hashCode() {
-            return Double.hashCode(x) * 31 + Double.hashCode(y);
+            return Objects.hash(x, y);
         }
     }
 
     static class Stick {
         Point p1, p2;
+        double length;
+        double x1, y1, x2, y2;
 
-        Stick(int x1, int y1, int x2, int y2) {
+        Stick(double x1, double y1, double x2, double y2) {
+            this.x1 = x1;
+            this.y1 = y1;
+            this.x2 = x2;
+            this.y2 = y2;
             this.p1 = new Point(x1, y1);
             this.p2 = new Point(x2, y2);
-        }
-
-        double length() {
-            return distance(p1, p2);
+            this.length = dist(p1, p2);
         }
     }
 
-    static List<Stick> sticks;
-    static Map<Integer, List<Integer>> adj;
-    static Map<Integer, List<Point>> stickIntersections;
-    static List<Integer> polygonStickIndices = null;
-
-    public static void main(String[] args) {
-        Scanner sc = new Scanner(System.in);
-
-        int N = sc.nextInt();
-        sticks = new ArrayList<>();
-        adj = new HashMap<>();
-        stickIntersections = new HashMap<>();
-
-        for (int i = 0; i < N; i++) {
-            adj.put(i, new ArrayList<>());
-            stickIntersections.put(i, new ArrayList<>());
-            int x1 = sc.nextInt();
-            int y1 = sc.nextInt();
-            int x2 = sc.nextInt();
-            int y2 = sc.nextInt();
-            sticks.add(new Stick(x1, y1, x2, y2));
-        }
-
-        for (int i = 0; i < N; i++) {
-            for (int j = i + 1; j < N; j++) {
-                Point p = getIntersection(sticks.get(i), sticks.get(j));
-                if (p != null) {
-                    adj.get(i).add(j);
-                    adj.get(j).add(i);
-                    stickIntersections.get(i).add(p);
-                    stickIntersections.get(j).add(p);
-                }
-            }
-        }
-
-        Set<Integer> visited = new HashSet<>();
-        for (int i = 0; i < N; i++) {
-            if (!visited.contains(i)) {
-                if (dfs(i, -1, new Stack<>(), visited)) {
-                    break;
-                }
-            }
-        }
-
-        if (polygonStickIndices == null) {
-            System.out.print("Abandoned");
-            return;
-        }
-
-        List<Point> polygonVertices = getPolygonVertices();
-        double areaKalyan = shoelaceArea(polygonVertices);
-
-        double lengthComputer = 0;
-        Set<Integer> polygonSet = new HashSet<>(polygonStickIndices);
-
-        Map<Integer, List<Point>> verticesOnStick = new HashMap<>();
-        for(int idx : polygonSet) verticesOnStick.put(idx, new ArrayList<>());
-
-        for(Point v : polygonVertices) {
-            for(int stickIdx : polygonSet) {
-                if(pointIsOnStick(v, sticks.get(stickIdx))) {
-                    verticesOnStick.get(stickIdx).add(v);
-                }
-            }
-        }
-
-        for (int i = 0; i < N; i++) {
-            Stick s = sticks.get(i);
-            double L_total = s.length();
-            if (!polygonSet.contains(i)) {
-                lengthComputer += L_total;
-            } else {
-                List<Point> verts = verticesOnStick.get(i);
-                if (verts.size() >= 2) {
-                    Point v1 = verts.get(0);
-                    Point v2 = verts.get(1);
-                    double L_kalyan = distance(v1, v2);
-                    lengthComputer += (L_total - L_kalyan);
-                }
-            }
-        }
-
-        double areaComputer = (lengthComputer * lengthComputer) / (4 * Math.PI);
-
-        if (areaKalyan > areaComputer + EPS) {
-            System.out.print("Kalyan");
-        } else {
-            System.out.print("Computer");
-        }
-
-        sc.close();
-    }
-
-    private static boolean dfs(int u, int parent, Stack<Integer> pathStack, Set<Integer> visited) {
-        pathStack.push(u);
-        visited.add(u);
-
-        for (int v : adj.get(u)) {
-            if (v == parent) continue;
-            if (pathStack.contains(v)) {
-                polygonStickIndices = new ArrayList<>();
-                polygonStickIndices.add(v);
-                Stack<Integer> tempStack = new Stack<>();
-                while (pathStack.peek() != v) {
-                    tempStack.push(pathStack.pop());
-                }
-                while (!tempStack.isEmpty()) {
-                    polygonStickIndices.add(tempStack.pop());
-                }
-                return true;
-            }
-            if (!visited.contains(v)) {
-                if (dfs(v, u, pathStack, visited)) {
-                    return true;
-                }
-            }
-        }
-        pathStack.pop();
-        return false;
-    }
-
-    private static List<Point> getPolygonVertices() {
-        Set<Point> uniqueVertices = new HashSet<>();
-
-        for (int stickIdx : polygonStickIndices) {
-            for(Point p : stickIntersections.get(stickIdx)) {
-                for (int otherIdx : polygonStickIndices) {
-                    if (stickIdx == otherIdx) continue;
-                    if (pointIsOnStick(p, sticks.get(otherIdx))) {
-                        uniqueVertices.add(p);
-                    }
-                }
-            }
-        }
-
-        List<Point> orderedVertices = new ArrayList<>(uniqueVertices);
-        if (orderedVertices.isEmpty()) {
-            return orderedVertices;
-        }
-
-        Point start = orderedVertices.get(0);
-        List<Point> finalVertices = new ArrayList<>();
-        finalVertices.add(start);
-
-        Point current = start;
-        Set<Point> added = new HashSet<>();
-        added.add(start);
-
-        while (finalVertices.size() < uniqueVertices.size()) {
-            Point next = null;
-            for(Point candidate : orderedVertices) {
-                if (added.contains(candidate)) continue;
-
-                for (int stickIdx : polygonStickIndices) {
-                    if (pointIsOnStick(current, sticks.get(stickIdx)) &&
-                            pointIsOnStick(candidate, sticks.get(stickIdx))) {
-                        next = candidate;
-                        break;
-                    }
-                }
-                if (next != null) break;
-            }
-            if (next != null) {
-                finalVertices.add(next);
-                added.add(next);
-                current = next;
-            } else {
-                break;
-            }
-        }
-
-        return finalVertices;
-    }
-
-    private static double shoelaceArea(List<Point> vertices) {
-        double area = 0.0;
-        int n = vertices.size();
-        for (int i = 0; i < n; i++) {
-            Point p1 = vertices.get(i);
-            Point p2 = vertices.get((i + 1) % n);
-            area += (p1.x * p2.y) - (p2.x * p1.y);
-        }
-        return 0.5 * Math.abs(area);
-    }
-
-    private static double distance(Point p1, Point p2) {
+    static double dist(Point p1, Point p2) {
         return Math.sqrt(Math.pow(p1.x - p2.x, 2) + Math.pow(p1.y - p2.y, 2));
     }
 
-    private static boolean pointIsOnStick(Point p, Stick s) {
-        double d1 = distance(s.p1, p);
-        double d2 = distance(p, s.p2);
-        double totalLen = s.length();
-        return Math.abs((d1 + d2) - totalLen) < EPS;
+    static boolean isOnSegment(Point p, Stick s) {
+        double minX = Math.min(s.x1, s.x2) - EPS;
+        double maxX = Math.max(s.x1, s.x2) + EPS;
+        double minY = Math.min(s.y1, s.y2) - EPS;
+        double maxY = Math.max(s.y1, s.y2) + EPS;
+
+        return p.x >= minX && p.x <= maxX && p.y >= minY && p.y <= maxY;
     }
 
-    private static Point getIntersection(Stick s1, Stick s2) {
-        double a1 = s1.p2.y - s1.p1.y;
-        double b1 = s1.p1.x - s1.p2.x;
-        double c1 = a1 * s1.p1.x + b1 * s1.p1.y;
+    static Point getIntersection(Stick s1, Stick s2) {
+        double a1 = s1.y2 - s1.y1;
+        double b1 = s1.x1 - s1.x2;
+        double c1 = a1 * s1.x1 + b1 * s1.y1;
 
-        double a2 = s2.p2.y - s2.p1.y;
-        double b2 = s2.p1.x - s2.p2.x;
-        double c2 = a2 * s2.p1.x + b2 * s2.p1.y;
+        double a2 = s2.y2 - s2.y1;
+        double b2 = s2.x1 - s2.x2;
+        double c2 = a2 * s2.x1 + b2 * s2.y1;
 
         double det = a1 * b2 - a2 * b1;
 
@@ -261,12 +84,140 @@ public class MainF {
         double x = (b2 * c1 - b1 * c2) / det;
         double y = (a1 * c2 - a2 * c1) / det;
 
-        Point p = Point.create(x, y);
+        Point p = new Point(x, y);
 
-        if (pointIsOnStick(p, s1) && pointIsOnStick(p, s2)) {
+        if (isOnSegment(p, s1) && isOnSegment(p, s2)) {
             return p;
         }
 
         return null;
+    }
+
+    static double getShoelaceArea(List<Point> vertices) {
+        double area = 0.0;
+        int n = vertices.size();
+        for (int i = 0; i < n; i++) {
+            Point p1 = vertices.get(i);
+            Point p2 = vertices.get((i + 1) % n);
+            area += (p1.x * p2.y) - (p2.x * p1.y);
+        }
+        return Math.abs(area) / 2.0;
+    }
+
+    static double getPerimeter(List<Point> vertices) {
+        double perimeter = 0.0;
+        int n = vertices.size();
+        for (int i = 0; i < n; i++) {
+            Point p1 = vertices.get(i);
+            Point p2 = vertices.get((i + 1) % n);
+            perimeter += dist(p1, p2);
+        }
+        return perimeter;
+    }
+
+    static boolean dfs(int u, int p, List<List<Integer>> adj, int[] parent,
+                       boolean[] visited, boolean[] inStack, List<Integer> cycleSticks) {
+        visited[u] = true;
+        inStack[u] = true;
+        parent[u] = p;
+
+        for (int v : adj.get(u)) {
+            if (v == p) {
+                continue;
+            }
+            if (inStack[v]) {
+                int curr = u;
+                while (curr != v) {
+                    cycleSticks.add(curr);
+                    curr = parent[curr];
+                }
+                cycleSticks.add(v);
+                return true;
+            }
+            if (!visited[v]) {
+                if (dfs(v, u, adj, parent, visited, inStack, cycleSticks)) {
+                    return true;
+                }
+            }
+        }
+        inStack[u] = false;
+        return false;
+    }
+
+    private static long getKey(int i, int j) {
+        return i < j ? (long)i << 32 | j : (long)j << 32 | i;
+    }
+
+    public static void main(String[] args) {
+        Scanner sc = new Scanner(System.in);
+        int n = sc.nextInt();
+
+        List<Stick> sticks = new ArrayList<>();
+        double totalLength = 0;
+
+        for (int i = 0; i < n; i++) {
+            Stick s = new Stick(sc.nextInt(), sc.nextInt(), sc.nextInt(), sc.nextInt());
+            sticks.add(s);
+            totalLength += s.length;
+        }
+
+        List<List<Integer>> adj = new ArrayList<>();
+        for (int i = 0; i < n; i++) {
+            adj.add(new ArrayList<>());
+        }
+
+        Map<Long, Point> intersectionMap = new HashMap<>();
+
+        for (int i = 0; i < n; i++) {
+            for (int j = i + 1; j < n; j++) {
+                Point p = getIntersection(sticks.get(i), sticks.get(j));
+                if (p != null) {
+                    adj.get(i).add(j);
+                    adj.get(j).add(i);
+                    intersectionMap.put(getKey(i, j), p);
+                }
+            }
+        }
+
+        List<Integer> cycleSticks = new ArrayList<>();
+        boolean[] visited = new boolean[n];
+        boolean[] inStack = new boolean[n];
+        int[] parent = new int[n];
+        boolean cycleFound = false;
+
+        for (int i = 0; i < n; i++) {
+            if (!visited[i]) {
+                if (dfs(i, -1, adj, parent, visited, inStack, cycleSticks)) {
+                    cycleFound = true;
+                    break;
+                }
+            }
+        }
+
+        if (!cycleFound) {
+            System.out.print("Abandoned");
+            return;
+        }
+
+        List<Point> cycleVertices = new ArrayList<>();
+        int k = cycleSticks.size();
+        for (int i = 0; i < k; i++) {
+            int u = cycleSticks.get(i);
+            int v = cycleSticks.get((i + 1) % k);
+            cycleVertices.add(intersectionMap.get(getKey(u, v)));
+        }
+
+        double kalyanArea = getShoelaceArea(cycleVertices);
+        double kalyanPerimeter = getPerimeter(cycleVertices);
+        double computerLength = totalLength - kalyanPerimeter;
+        double computerArea = (computerLength * computerLength) / (4.0 * Math.PI);
+
+        if (kalyanArea > computerArea) {
+            System.out.print("Kalyan");
+        } else {
+            System.out.print("Computer");
+        }
+
+        sc.close();
     }
 }
