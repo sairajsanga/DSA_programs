@@ -14,12 +14,7 @@ class Solution {
         int first=temp[n-1];
         int secound=temp[n-2];
 
-        Arrays.sort(nums);
-        int neg=0;
-        if(first!=nums[n-1]||secound!=nums[n-2]){
-            neg++;
-        }
-        
+       
         return (long)first*secound*(100000);      
     }
 }
