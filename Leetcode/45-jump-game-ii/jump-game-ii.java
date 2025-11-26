@@ -11,8 +11,8 @@ class Solution {
         if(dp[start]!=-1) return dp[start];
         int ele=nums[start];
         int min=nums.length;
-        for(int i=start+1;i<=start+ele;i++){
-           min=Math.min(1+solve(nums,n,i,dp),min);
+        for(int i=1;i<=ele;i++){
+           min=Math.min(1+solve(nums,n,i+start,dp),min);
         } 
         return dp[start]=min;
     }
