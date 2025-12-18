@@ -35,6 +35,7 @@ class Solution {
                    else{
                      healths[currIndex]=0;
                      healths[topIndex]=0;
+                     break;
                    }
                 }      
             }
