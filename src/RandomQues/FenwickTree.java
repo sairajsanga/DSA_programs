@@ -55,6 +55,7 @@ public class FenwickTree {
         build(arr);
         System.out.println(rangesum(2,4));
         System.out.println(lowerbound(6));
+        System.out.println(rangesum(1,3));
 
     }
 
