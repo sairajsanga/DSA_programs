@@ -37,17 +37,16 @@ class Solution {
         int res=Math.max(helper(coins,memo,i,j+1,k),
                          helper(coins,memo,i+1,j,k))+x;
         
-       
+        int skip=Integer.MIN_VALUE;
         if(k>0&&x<0){
-            res=Math.max(res,
-            Math.max(
-                helper(coins,memo,i,j+1,k-1),
-                helper(coins,memo,i+1,j,k-1)
-            ));
+
+            int skipright=helper(coins,memo,i,j+1,k-1);
+            int skipdown=helper(coins,memo,i+1,j,k-1);
+
+            skip=Math.max(skipright,skipdown);
         }
 
 
-        memo[i][j][k]=res;
-        return res;
+        return memo[i][j][k]=Math.max(res,skip);
     }
 }
