@@ -6,7 +6,7 @@ class Solution {
        for(int i=0;i<n;i++){
           int ele=nums1[i];
           int idx=binarySearch(ele,0,m-1,nums2);
-          if(idx<0) continue;
+        //   if(idx<0) continue;
           max=Math.max(max,idx-i);
         }
         return max;
