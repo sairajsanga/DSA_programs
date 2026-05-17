@@ -2,23 +2,33 @@ class Solution {
     public boolean canReach(int[] arr, int start) {
         int n = arr.length;
 
-        return helper(arr, start);
-    }
+        Queue<Integer> q = new LinkedList<>();
+        q.offer(start);
 
-    public boolean  helper(int arr[], int start) {
+        while (!q.isEmpty()) {
+            int idx = q.poll();
 
-        if (start >= arr.length || start < 0||arr[start]<0)
-            return false;
+            if (idx < 0 || arr[idx] < 0 || idx >= n)
+               continue;
 
-        if(arr[start]==0) return true;
+            if (arr[idx] == 0)
+                return true;
 
-        int jumpindex=arr[start];
-        arr[start]=-1;
+            int jumpidx = arr[idx];
+            arr[idx] = -1;
 
-        boolean right = helper(arr, start + jumpindex);
+            int right = idx + jumpidx;
+            int left = idx - jumpidx;
+            if (right >= 0 && right < n && arr[right] >= 0) {
+                q.offer(right);
+            }
 
-        boolean left = helper(arr, start - jumpindex);
+            if (left >= 0 && arr[left] >= 0 && left < n) {
+                q.offer(left);
+            }
 
-        return right||left;
+        }
+
+        return false;
     }
 }
