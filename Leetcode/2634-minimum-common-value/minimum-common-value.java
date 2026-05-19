@@ -3,14 +3,16 @@ class Solution {
         int n=nums1.length;
         int m=nums2.length;
 
-        Set<Integer> set=new HashSet<>();
-
-        for(int ele:nums1){
-            set.add(ele);
-        }
-
-        for(int i=0;i<m;i++){
-           if(set.contains(nums2[i])) return nums2[i];
+        int i=0;
+        int j=0;
+        while(i<n&&j<m){
+            if(nums1[i]==nums2[j]) return nums1[i];
+            if(nums1[i]<nums2[j]){
+                i++;
+            }
+            else{
+                j++;
+            }
         }
 
         return -1;
