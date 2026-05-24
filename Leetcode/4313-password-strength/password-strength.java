@@ -12,13 +12,13 @@ class Solution {
         for(int i=0;i<n;i++){
             char x=password.charAt(i);
             if(!charset.contains(x)){
-                if(x>=97&&x<=122){
+                if(x>='a'&&x<='z'){
                     strength+=1;
                 }
-                else if(x>=65&&x<=90){
+                else if(x>='A'&&x<='Z'){
                     strength+=2;
                 }
-                else if(x>=48&&x<=57){
+                else if(x>='0'&&x<='9'){
                     strength+=3;
                 }
                 else{
