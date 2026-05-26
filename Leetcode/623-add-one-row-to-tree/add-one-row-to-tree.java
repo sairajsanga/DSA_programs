@@ -15,33 +15,49 @@
  */
 class Solution {
     public TreeNode addOneRow(TreeNode root, int val, int depth) {
-        if(root==null) return null;
-        if(depth==1){
-            TreeNode newroot=new TreeNode(val);
-            newroot.left=root;
+        if (root == null)
+            return null;
+
+        if (depth == 1) {
+            TreeNode newroot = new TreeNode(val);
+            newroot.left = root;
             return newroot;
         }
 
-        return dfs(root,val,1,depth);
-    }
-    public TreeNode dfs(TreeNode root,int val,int currdepth,int depth){
-        if (root == null)
-            return null;
-        if(currdepth==depth-1){
-            TreeNode lefttemp=root.left;
-            TreeNode righttemp=root.right;
+        Queue<TreeNode> q = new LinkedList<>();
+        q.add(root);
+        int level = 1;
+        while (!q.isEmpty()) {
+            int levelsize = q.size();
 
-            root.left=new TreeNode(val);
-            root.right=new TreeNode(val);
+            if (level == depth - 1) {
+                for (int i = 0; i < levelsize; i++) {
+                    TreeNode curr = q.poll();
 
-            root.left.left=lefttemp;
-            root.right.right=righttemp;
-            return root;
-        }  
+                    TreeNode lefttemp = curr.left;
+                    TreeNode righttemp = curr.right;
 
-        root.left=dfs(root.left,val,currdepth+1,depth);
-        root.right=dfs(root.right,val,currdepth+1,depth);
-        return root;  
-       
+                    curr.left = new TreeNode(val);
+                    curr.right = new TreeNode(val);
+                    curr.left.left = lefttemp;
+                    curr.right.right = righttemp;
+                }
+                break;
+            }
+
+            for (int i = 0; i < levelsize; i++) {
+                TreeNode curr = q.poll();
+                if (curr.left != null) {
+                    q.add(curr.left);
+                }
+                if (curr.right != null) {
+                    q.add(curr.right);
+                }
+            }
+
+            level++;
+        }
+        return root;
+
     }
 }
