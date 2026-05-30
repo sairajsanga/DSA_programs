@@ -20,7 +20,7 @@ class Solution {
 
         for(int i=0;i<n;i++){
             if(colors[i]==-1){
-                if(!BFS(adj,i,1)) return false;
+                if(!DFS(adj,i,1)) return false;
             }
         }
 
@@ -28,25 +28,41 @@ class Solution {
 
     }
 
-    public boolean BFS( List<List<Integer>> adj,int curr,int currcolor){
-        Queue<Integer> q=new LinkedList<>();
-        q.add(curr);
+
+    public boolean DFS(List<List<Integer>> adj,int curr,int currcolor){
+
         colors[curr]=currcolor;
 
-        while(!q.isEmpty()){
-            int node=q.poll();
-            int nodecolor=colors[node];
+        for(int v:adj.get(curr)){
+            if(colors[v]==currcolor) return false;
 
-            for(int v:adj.get(node)){
-                if(colors[v]==nodecolor) return false;
-
-                if(colors[v]==-1){
-                    colors[v]=1-nodecolor;
-                    q.add(v);
-                }
+            if(colors[v]==-1){
+                if(!DFS(adj,v,1-currcolor)) return false;
             }
-
         }
+        
         return true;
     }
+
+    // public boolean BFS( List<List<Integer>> adj,int curr,int currcolor){
+    //     Queue<Integer> q=new LinkedList<>();
+    //     q.add(curr);
+    //     colors[curr]=currcolor;
+
+    //     while(!q.isEmpty()){
+    //         int node=q.poll();
+    //         int nodecolor=colors[node];
+
+    //         for(int v:adj.get(node)){
+    //             if(colors[v]==nodecolor) return false;
+
+    //             if(colors[v]==-1){
+    //                 colors[v]=1-nodecolor;
+    //                 q.add(v);
+    //             }
+    //         }
+
+    //     }
+    //     return true;
+    // }
 }
