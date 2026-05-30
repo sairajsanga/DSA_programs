@@ -21,23 +21,29 @@ class Solution {
 
         boolean visited[]=new boolean[n];
 
-        int count=0;
+       int count=0;
        for(int i=0;i<n;i++){
           if(!visited[i]){
-              DFS(adj,i,visited);
+              BFS(adj,i,visited);
               count++;
           }
        }
        return count;
     }
-    public void DFS( List<List<Integer>> adj,int u,boolean visited[]){
+    public void BFS( List<List<Integer>> adj,int u,boolean visited[]){
         
+        Queue<Integer> q=new LinkedList<>();
+        q.add(u);
         visited[u]=true;
-        
-        for(int v:adj.get(u)){
-            if(!visited[v]){
-                DFS(adj,v,visited);
-            }
+        while(!q.isEmpty()){
+            int node=q.poll();
+
+             for(int v:adj.get(node)){
+                if(!visited[v]){
+                    visited[v]=true;
+                    q.add(v);
+                }
+             }
         }
     }
 }
