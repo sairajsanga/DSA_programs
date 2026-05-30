@@ -1,12 +1,9 @@
 class Solution {
-    List<Integer> res;
-    Stack<Integer> stack;
     public int[] findOrder(int numCourses, int[][] nums) {
 
-        boolean visited[]=new boolean[numCourses];
-        boolean inRecursion[]=new boolean[numCourses];
-        this.stack=new Stack<>();
-        this.res=new ArrayList<>();
+        int indegree[]=new int[numCourses];
+
+
 
         List<List<Integer>> adj = new ArrayList<>();
         for(int i=0;i<numCourses;i++){
@@ -15,38 +12,36 @@ class Solution {
 
         for(int num[]:nums){
             adj.get(num[1]).add(num[0]);
+            indegree[num[0]]++;
         }
+        
+        Queue<Integer> q=new LinkedList<>();
+        
+        for(int i=0;i<indegree.length;i++){
+            if(indegree[i]==0) q.add(i);
+        }
+        int result[]=new int[numCourses];
+        int idx=0;
 
-        for(int i=0;i<numCourses;i++){
-            if(!visited[i]&&DFS(adj,i,visited,inRecursion)){
-                return new int[]{};
+        while(!q.isEmpty()){
+            int node=q.poll();
+            result[idx++]=node;
+
+            for(int v:adj.get(node)){
+                    indegree[v]--;
+                    if(indegree[v]==0){
+                        q.add(v);
+                    }
             }
         }
         
-       
-        
-        while(!stack.isEmpty()){
-             res.add(stack.pop());        
-        }
-        int result[]=new int[res.size()];
-        for(int i=0;i<res.size();i++){
-            result[i]=res.get(i);
-        }
-        return result;  
+
+        return numCourses==idx?result:new int[]{};  
     }
 
-     public boolean DFS( List<List<Integer>> adj,int u,boolean visited[],boolean inRecursion[]){
+    //  public void BFS( List<List<Integer>> adj,int u,boolean visited[],int indegree[]){
 
-        visited[u]=true;
-        inRecursion[u]=true;
-       
         
-        for(int v:adj.get(u)){
-            if(!visited[v]&&DFS(adj,v,visited,inRecursion)) return true;
-            else if(inRecursion[v]) return true;
-        }  
-        stack.push(u);
-        inRecursion[u]=false;
-        return false;
-    }
+        
+    // }
 }
