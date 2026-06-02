@@ -55,7 +55,7 @@ class Solution {
 
             visited[i] = false;
 
-            if(currSum==0) break;
+            // if(currSum==0) break;
         }
 
         
