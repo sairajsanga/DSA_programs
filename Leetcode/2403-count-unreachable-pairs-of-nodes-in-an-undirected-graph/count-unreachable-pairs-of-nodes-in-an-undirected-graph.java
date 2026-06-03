@@ -22,7 +22,7 @@ class Solution {
         for(int i=0;i<n;i++){
             if(!visited[i]){
                 size=0;
-                dfs(adj,visited,i);
+                bfs(adj,visited,i);
                 res+=size*(rem-size);
                 rem-=size;
             }
@@ -31,14 +31,31 @@ class Solution {
 
     }
 
-    public void dfs(List<List<Integer>> adj,boolean visited[],int u){
-
+    public void bfs(List<List<Integer>> adj,boolean visited[],int u){
+        Queue<Integer> q=new LinkedList<>();
+        q.add(u);
         visited[u]=true;
         size++;
-        for(int v:adj.get(u)){
-            if(!visited[v]){
-                dfs(adj,visited,v);
-            }
+        while(!q.isEmpty()){
+            int curr=q.poll();
+            for(int v:adj.get(curr)){
+               if(!visited[v]){
+                  visited[v]=true;
+                  q.add(v);
+                  size++;
+               }
+           }
         }
     }
+
+    // public void dfs(List<List<Integer>> adj,boolean visited[],int u){
+
+    //     visited[u]=true;
+    //     size++;
+    //     for(int v:adj.get(u)){
+    //         if(!visited[v]){
+    //             dfs(adj,visited,v);
+    //         }
+    //     }
+    // }
 }
