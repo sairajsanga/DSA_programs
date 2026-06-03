@@ -34,7 +34,7 @@ class Solution {
                 int parentv=find(v,parent);
 
                 if(parentu!=parentv){
-                    union(parentu,parentv,parent,rank);
+                    union(u,v,parent,rank);
                     comp--;
                 }
             }
@@ -51,7 +51,10 @@ class Solution {
         return parent[i]=find(parent[i],parent);
     }
     
-    public void union(int x_parent,int y_parent,int parent[],int rank[]){
+    public void union(int x,int y,int parent[],int rank[]){
+
+        int x_parent=find(x,parent);
+        int y_parent=find(y,parent);
         
         if(x_parent==y_parent) return;
         
