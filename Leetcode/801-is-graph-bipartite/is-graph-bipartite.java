@@ -1,5 +1,49 @@
 class Solution {
-    int colors[];
+
+    class DSU{
+        int [] parent,rank;
+
+        public DSU(int n){
+            this.parent=new int[n];
+            this.rank=new int[n];
+
+            for(int i=0;i<n;i++){
+                parent[i]=i;
+            }
+
+        }
+        
+
+        public int find(int u){
+            if(u==parent[u]) return u;
+
+            return parent[u]=find(parent[u]);
+        }
+
+        public void union(int u,int v){
+            int u_p=find(u);
+            int v_p=find(v);
+            
+
+            if(u_p==v_p) return;
+
+            if(rank[u_p]>rank[v_p]){
+                parent[v_p]=u_p;
+            }
+            else if(rank[u_p]<rank[v_p]){
+                parent[u_p]=v_p;
+            }
+            else{
+                parent[v_p]=u_p;;
+                rank[u_p]++;
+            }
+        }
+
+
+
+        
+    }
+ 
     public boolean isBipartite(int[][] graph) {
         int n=graph.length;
         List<List<Integer>> adj=new ArrayList<>();
@@ -8,61 +52,28 @@ class Solution {
             adj.add(new ArrayList<>());
         }
 
-        for(int i=0;i<n;i++){
-            int edge[]=graph[i];
-            for(int ele:edge){
-                adj.get(i).add(ele);
-            }
-        }
+        DSU dsu=new DSU(n);
+       
+        for(int u=0;u<n;u++){
 
-        this.colors=new int[n];
-        Arrays.fill(colors,-1);
+           if(graph[u].length==0) continue;
+           
+           int firstneigbour=graph[u][0];
 
-        for(int i=0;i<n;i++){
-            if(colors[i]==-1){
-                if(!DFS(adj,i,1)) return false;
-            }
+           for(int v:graph[u]){
+
+              
+
+               int u_p=dsu.find(u);
+               int v_p=dsu.find(v);
+
+               if(u_p==v_p) return false;
+              
+                dsu.union(firstneigbour,v);
+                
+           }
         }
 
         return true;
-
     }
-
-
-    public boolean DFS(List<List<Integer>> adj,int curr,int currcolor){
-
-        colors[curr]=currcolor;
-
-        for(int v:adj.get(curr)){
-            if(colors[v]==currcolor) return false;
-
-            if(colors[v]==-1){
-                if(!DFS(adj,v,1-currcolor)) return false;
-            }
-        }
-        
-        return true;
-    }
-
-    // public boolean BFS( List<List<Integer>> adj,int curr,int currcolor){
-    //     Queue<Integer> q=new LinkedList<>();
-    //     q.add(curr);
-    //     colors[curr]=currcolor;
-
-    //     while(!q.isEmpty()){
-    //         int node=q.poll();
-    //         int nodecolor=colors[node];
-
-    //         for(int v:adj.get(node)){
-    //             if(colors[v]==nodecolor) return false;
-
-    //             if(colors[v]==-1){
-    //                 colors[v]=1-nodecolor;
-    //                 q.add(v);
-    //             }
-    //         }
-
-    //     }
-    //     return true;
-    // }
 }
