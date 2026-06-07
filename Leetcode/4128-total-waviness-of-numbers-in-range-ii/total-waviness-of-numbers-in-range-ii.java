@@ -22,7 +22,7 @@ class Solution {
     public long find(long num){
         this.digits=Long.toString(num).toCharArray();
         this.n=digits.length;
-        this.dp=new Result[11][11][17][2][2];
+        this.dp=new Result[10][10][16][2][2];
         if(n<3) return 0;
 
         Result s=solve(-1,-1,0,true,true);
@@ -39,7 +39,7 @@ class Solution {
             return new Result(1,0);
         }
 
-        if(prev!=-1 && dp[prevPrev+1][prev+1][curr][issame?1:0][leadingZero?1:0]!=null) return dp[prevPrev+1][prev+1][curr][issame?1:0][leadingZero?1:0];
+        if(prevPrev!=-1&&prev!=-1 && dp[prevPrev][prev][curr][issame?1:0][leadingZero?1:0]!=null) return dp[prevPrev][prev][curr][issame?1:0][leadingZero?1:0];
 
         long totalwaves=0;
         long totalwaviness=0;
@@ -65,7 +65,7 @@ class Solution {
             totalwaves+=child.waves;
             totalwaviness+=child.waviness;  
         }
-        if(prev!=-1) dp[prevPrev+1][prev+1][curr][issame?1:0][leadingZero?1:0]=new Result(totalwaves,totalwaviness); 
+        if(prevPrev!=-1&&prev!=-1) dp[prevPrev][prev][curr][issame?1:0][leadingZero?1:0]=new Result(totalwaves,totalwaviness); 
         return new Result(totalwaves,totalwaviness);      
     }
 
