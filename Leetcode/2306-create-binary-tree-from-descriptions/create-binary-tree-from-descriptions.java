@@ -85,24 +85,22 @@ class Solution {
 
         while (!q.isEmpty()) {
             int size = q.size();
-            for (int i = 0; i < size; i++) {
-                TreeNode curr = q.poll();
-                int val = curr.val;
-                List<Pair> list = map.get(val);
-                if (list != null) {
-                    for (Pair p : list) {
-                        TreeNode node = new TreeNode(p.child);
-                        if (p.isLeft == 1) {
-                            curr.left = node;
-                            
-                        } else {
-                            curr.right = node;
-                            
-                        }
-                        q.add(node);
-                    }
-                }
 
+            TreeNode curr = q.poll();
+            List<Pair> list = map.get(curr.val);
+            
+            if(list==null) continue;
+            
+            for (Pair p : list) {
+                TreeNode node = new TreeNode(p.child);
+                if (p.isLeft == 1) {
+                    curr.left = node;
+
+                } else {
+                    curr.right = node;
+
+                }
+                q.add(node);
             }
         }
 
