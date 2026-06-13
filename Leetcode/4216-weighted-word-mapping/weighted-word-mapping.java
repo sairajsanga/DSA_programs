@@ -1,7 +1,6 @@
 class Solution {
     public String mapWordWeights(String[] words, int[] weights) {
-
-        StringBuilder str=new StringBuilder();
+        String str="";
         for(int i=0;i<words.length;i++){
             String s=words[i];
             int sum=0;
@@ -11,11 +10,11 @@ class Solution {
 
             int v=sum%26;
             int charval=26-v;
-           char ch=(char)(charval+'a'-1);
-           str.append(ch);   
+            char ch=(char)(charval+'a'-1);
+            str=str+ch;  
         }
 
-        return str.toString();
+        return str;
         
     }
 
