@@ -1,41 +1,52 @@
 class Solution {
-    int m;
-    int n;
     public boolean findSafeWalk(List<List<Integer>> grid, int health) {
-       this.m=grid.size();
-       this.n=grid.get(0).size();
+        int m=grid.size();
+        int n=grid.get(0).size();
 
-       PriorityQueue<int[]> q=new PriorityQueue<>((a,b)->a[2]-b[2]);
-       int dist[][]=new int[m][n];
-       for(int i=0;i<m;i++) Arrays.fill(dist[i],-1);
-       q.offer(new int[]{0,0,grid.get(0).get(0)});
+        int directions[][]={{-1,0},{0,-1},{1,0},{0,1}};
 
-       int directions[][]={
-           {0,1},
-           {0,-1},
-           {1,0},
-           {-1,0}
-       };
-       while(!q.isEmpty()){
-          int curr[]=q.poll();
+        PriorityQueue<int[]> q=new PriorityQueue<>((a,b)->b[0]-a[0]);
+        boolean visited[][]=new boolean[m][n];
+        q.add(new int[]{health-grid.get(0).get(0),0,0});
 
-          int i=curr[0];
-          int j=curr[1];
-          int val=curr[2];
+        while(!q.isEmpty()){
+            int curr[]=q.poll();
+            int h=curr[0];
+            int x=curr[1];
+            int y=curr[2];
+     
+            if(x<0||y<0||x>=m||y>=n||visited[x][y]||h<=0) continue;
 
-          if(dist[i][j]>=0) continue;
-          dist[i][j]=val;
-          for(int dir[]:directions){
-              int x=i+dir[0];
-              int y=j+dir[1];
-              
-              if(x<0||y<0||x>=m||y>=n) continue;
-              if(dist[x][y]>=0) continue;
+            if(x==m-1&&y==n-1) return true;
 
-              q.offer(new int[]{x,y,val+grid.get(x).get(y)});
-          }
-       }
-       return dist[m-1][n-1]<health;
+            System.out.println("x-->"+x+" y-->"+y+ " health-->"+h);
+
+            visited[x][y]=true;
+            for(int dir[]:directions){
+                int i=x+dir[0];
+                int j=y+dir[1];
+
+                if(i<0||j<0||i>=m||j>=n||visited[i][j]||h<=0) continue;
+
+                q.add(new int[]{h-grid.get(i).get(j),i,j});
+            }
+        }
+        return false;
     }
-   
 }
+
+
+/*
+[[0,1,0,0,0],
+[0,1,0,1,0],
+[0,0,0,1,1]]
+*/
+
+
+
+
+
+
+
+
+
