@@ -1,19 +1,20 @@
 class Solution {
+    private record Pair(int h,int x,int y){}; 
     public boolean findSafeWalk(List<List<Integer>> grid, int health) {
         int m=grid.size();
         int n=grid.get(0).size();
 
         int directions[][]={{-1,0},{0,-1},{1,0},{0,1}};
 
-        PriorityQueue<int[]> q=new PriorityQueue<>((a,b)->b[0]-a[0]);
+        PriorityQueue<Pair> q=new PriorityQueue<>((a,b)->b.h-a.h);
         boolean visited[][]=new boolean[m][n];
-        q.add(new int[]{health-grid.get(0).get(0),0,0});
+        q.add(new Pair(health-grid.get(0).get(0),0,0));
 
         while(!q.isEmpty()){
-            int curr[]=q.poll();
-            int h=curr[0];
-            int x=curr[1];
-            int y=curr[2];
+            Pair curr=q.poll();
+            int h=curr.h;
+            int x=curr.x;
+            int y=curr.y;
      
             if(x<0||y<0||x>=m||y>=n||visited[x][y]||h<=0) continue;
 
@@ -28,7 +29,7 @@ class Solution {
 
                 if(i<0||j<0||i>=m||j>=n||visited[i][j]||h<=0) continue;
 
-                q.add(new int[]{h-grid.get(i).get(j),i,j});
+                q.add(new Pair(h-grid.get(i).get(j),i,j));
             }
         }
         return false;
