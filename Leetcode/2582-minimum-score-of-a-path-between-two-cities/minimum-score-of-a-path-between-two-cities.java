@@ -1,45 +1,37 @@
 class Solution {
-
-    class DSU{
-        int parent[];
-        int weight[];
-
-        public DSU(int n){
-            this.parent=new int[n];
-            this.weight=new int[n];
-
-            for(int i=0;i<n;i++){
-                parent[i]=i;
-                weight[i]=Integer.MAX_VALUE;
-            }
-        }
-
-        public int find(int a){
-            if(parent[a]==a) return a;
-
-            return parent[a]=find(parent[a]);
-        }
-
-        public void union(int a,int b,int c){
-            int parent_a=find(a);
-            int parent_b=find(b);
-
-            if(parent_a==parent_b){
-                weight[parent_a]=Math.min(c,weight[parent_a]);
-                return;
-            }
-
-            parent[parent_b]=parent_a;
-            weight[parent_a]=Math.min(c,Math.min(weight[parent_a],weight[parent_b]));
-        }
-    }
+    int min;
     public int minScore(int n, int[][] roads) {
-        DSU dsu=new DSU(n+1);
+        List<List<int[]>> adj=new ArrayList<>();
+
+        for(int i=0;i<=n;i++){
+            adj.add(new ArrayList<>());
+        }
 
         for(int road[]:roads){
-           dsu.union(road[0],road[1],road[2]);
-        }
+            int u=road[0];
+            int v=road[1];
+            int d=road[2];
 
-        return dsu.weight[dsu.find(1)];
+            adj.get(u).add(new int[]{v,d});
+            adj.get(v).add(new int[]{u,d});
+        }
+        boolean visited[]=new boolean[n+1];
+        this.min=Integer.MAX_VALUE;
+        dfs(1,adj,visited);
+        return min;
+    }
+    public void dfs(int u,List<List<int[]>> adj,boolean visited[]){
+
+        visited[u]=true;
+
+        for(int road[]:adj.get(u)){
+            int v=road[0];
+            int d=road[1];
+            
+            min=Math.min(min,d);
+            if(!visited[v]){
+                dfs(v,adj,visited);
+            }
+        }
     }
 }
