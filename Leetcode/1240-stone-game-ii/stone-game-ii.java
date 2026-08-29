@@ -1,29 +1,34 @@
 class Solution {
-    int suffix[];
-    Integer dp[][];
-    public int stoneGameII(int[] piles) {
-        int n=piles.length;
-        this.suffix=new int[n+1];
-        this.dp=new Integer[n][n+1];
 
-        for(int i=n-1;i>=0;i--){
-            suffix[i]=suffix[i+1]+piles[i];
-        }
-        return solve(piles,0,1);
+    Integer dp[][][];
+    
+    public int stoneGameII(int[] piles) {
+
+        int n=piles.length;
+        this.dp=new Integer[2][n+1][n+1];
+        
+        return solve(piles,1,0,1);
     }
 
-    public int solve(int []piles,int index,int m){
-        
-        if(index>=piles.length) return 0;
+    public int solve(int piles[],int person,int idx,int M){
 
-        if(2*m>=piles.length-index) return suffix[index];
+        if(idx>=piles.length) return 0;
 
-        if(dp[index][m]!=null) return dp[index][m];
+        if(dp[person][idx][M]!=null) return dp[person][idx][M];
 
-        int score=0;
-        for(int i=1;i<=2*m;i++){
-           score=Math.max(score,suffix[index]-solve(piles,index+i,Math.max(m,i)));
+        int stones=0;
+        int result=(person==1)?-1:Integer.MAX_VALUE;
+
+        for(int x=1;x<=Math.min(2*M,piles.length-idx);x++){
+            stones+=piles[idx+x-1];
+            if(person==1){
+                result=Math.max(result,stones+solve(piles,0,idx+x,Math.max(M,x)));
+            }else{
+                result=Math.min(result,solve(piles,1,idx+x,Math.max(M,x)));
+            }
         }
-        return dp[index][m]=score;
+
+        return dp[person][idx][M]=result;
+
     }
 }
