@@ -5,7 +5,7 @@ class Solution {
         int drops=0;
 
         for(int i=0;i<n-1;i++){
-            if(nums[i]>nums[(i+1)%n]){
+            if(nums[i]>nums[(i+1)]){
                 drops++;
             }
             if(drops>1) return false;
