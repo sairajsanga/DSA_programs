@@ -17,21 +17,13 @@ class Solution {
             minidx=i;
            }
         }
-        System.out.println(min+" "+minidx+" "+max+" "+maxidx+" ");
-        int total=0;
-        if(minidx!=-1&& maxidx!=-1){
-            if(maxidx<minidx){
-                int first=minidx+1;
-                int secound=n-maxidx;
-                int third=(maxidx+1)+(n-minidx);
-                total=Math.min(Math.min(first,secound),third);
-            }else{
-                int first=maxidx+1;
-                int secound=n-minidx;
-                int third=(minidx+1)+(n-maxidx);
-                total=Math.min(Math.min(first,secound),third);
-            }
-        }
-        return total;
+      
+        int a=Math.min(minidx,maxidx);
+        int b =Math.max(minidx,maxidx);
+         int front=b+1;
+         int back=n-a;
+         int both=(a+1)+(n-b);
+         return Math.min(front,Math.min(back,both));
+        
     }
 }
