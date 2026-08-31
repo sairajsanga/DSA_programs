@@ -11,15 +11,15 @@
 class Solution {
     public int[] nodesBetweenCriticalPoints(ListNode head) {
 
-        int size=0;
-        ListNode temp=head;
+        // int size=0;
+        // ListNode temp=head;
     
-        while(temp!=null){
-            temp=temp.next;
-            size++;
-        }
+        // while(temp!=null){
+        //     temp=temp.next;
+        //     size++;
+        // }
 
-        if(size<=2) return new int[]{-1,-1};
+        // if(size<=2) return new int[]{-1,-1};
 
         ListNode firstidx=head;
         ListNode prev=null;
@@ -56,7 +56,7 @@ class Solution {
         for(int i=1;i<list.size();i++){
             minDist=Math.min(minDist,list.get(i)-list.get(i-1));
         }
-        
+
         return new int[]{minDist,maxDist};
     }
 }
