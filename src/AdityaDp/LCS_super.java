@@ -10,6 +10,7 @@ public class LCS_super {
         System.out.println("Enter the String 2:");
         String s2=sc.nextLine();
         System.out.println(s1.length()+s2.length()-printLCS(s1,s2,s1.length(),s2.length()).length());
+        System.out.println(printLCS(s1,s2,s1.length(),s2.length()));
 
 
     }

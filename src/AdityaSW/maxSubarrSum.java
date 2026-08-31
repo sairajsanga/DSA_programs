@@ -2,9 +2,10 @@ package AdityaSW;
 
 public class maxSubarrSum {
     public static void main(String[] args) {
-        int arr[]={2,5,1,8,2,9,1};
+        int arr[]={2,5,1,8,2,-9,1};
         int windSize=3;
-        System.out.println(sums(arr,arr.length,windSize));
+        System.out.println(kadanesAlgo(arr));
+
     }
 //    public static int solves(int arr[],int n,int k){
 //        int sum=sumof(arr,0,k);
@@ -42,4 +43,26 @@ public class maxSubarrSum {
         }
         return max;
     }
+
+    public static int kadanesAlgo(int nums[]){
+        int n=nums.length;
+        int i=0;
+        int j=0;
+        int curr=0;
+        int max=Integer.MIN_VALUE;
+        while(j<n){
+            curr+=nums[j];
+            if(curr<0){
+              curr=0;
+              i++;
+            }
+            else{
+              max=Math.max(max,curr);
+              j++;
+            }
+        }
+        return max;
+    }
+
+
 }

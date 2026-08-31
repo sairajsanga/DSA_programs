@@ -15,7 +15,7 @@ public class LargetInSub {
         }
     }
     public static void main(String[] args) {
-        int arr[]={10, 9, 8, 7, 6, 5, 4, 3, 2, 1 };
+        int arr[]={ 1, 8, 9,7,10, 6, 5, 4, 3, 2 };
         int k=3;
         List<Integer> list=new ArrayList<>();
         System.out.println(ListofLarEle(arr,list,k));
@@ -23,7 +23,7 @@ public class LargetInSub {
     public static List<Integer> ListofLarEle(int nums[],List<Integer> list ,int k){
         int i=0;
         int j=0;
-        int max=nums[0];
+        int max=-1;
         PriorityQueue<Pair> pq=new PriorityQueue<>((a,b)->{
            return (b.value-a.value);
         });
@@ -38,7 +38,9 @@ public class LargetInSub {
                }
                list.add(pq.peek().value);
                i++;
+               j++;
            }
+
         }
         return list;
     }

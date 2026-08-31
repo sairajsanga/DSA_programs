@@ -7,7 +7,7 @@ import java.util.Queue;
 
 public class FirstNegSub {
     public static void main(String[] args) {
-        int arr[]={-8,2,3,-6,10};
+        int arr[]={-8,-8,2,3,-6,10};
         int k=2;
         List<Integer> integers = firstNegInt(arr, k);
         System.out.println(integers);
@@ -20,7 +20,7 @@ public class FirstNegSub {
         int n=arr.length;
         while(j<n){
             if(arr[j]<0){
-                list.offer(arr[j]);
+                list.offer(j);
             }
             if(j-i+1<k){
                 j++;
@@ -30,9 +30,9 @@ public class FirstNegSub {
                     l.add(0);
                 }
                 else{
-                    l.add(list.peek());
+                    l.add(arr[list.peek()]);
                 }
-                if(!list.isEmpty()&&arr[i]==list.peek()){
+                if(!list.isEmpty()&&arr[i]==arr[list.peek()]){
                     list.poll();
                 }
                 i++;

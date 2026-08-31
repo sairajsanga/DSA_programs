@@ -6,7 +6,7 @@ public class pattern {
     public static void main(String[] args) {
         Scanner sc=new Scanner(System.in);
          int n=sc.nextInt();
-         pattern1(n);
+         patterns(n);
     }
     public static void pattern1(int n){
            for(int i=1;i<=n-1;i++){
