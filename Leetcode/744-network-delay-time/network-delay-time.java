@@ -1,45 +1,40 @@
 class Solution {
     public int networkDelayTime(int[][] times, int n, int k) {
 
+
         List<List<int[]>> adj=new ArrayList<>();
 
-        for(int i=0;i<=n;i++){
-            adj.add(new ArrayList<>());
-        }
+        for(int i=0;i<=n;i++) adj.add(new ArrayList<>());
 
         for(int edge[]:times){
             int u=edge[0];
             int v=edge[1];
             int w=edge[2];
 
-            adj.get(u).add(new int[]{w,v});
+            adj.get(u).add(new int[]{v,w});
         }
-
-
+        
         int dist[]=new int[n+1];
         Arrays.fill(dist,Integer.MAX_VALUE);
-
-        PriorityQueue<int[]> pq=new PriorityQueue<>((a,b)->a[0]-b[0]);
-
+        PriorityQueue<int[]> q=new PriorityQueue<>((a,b)->a[1]-b[1]);
         dist[k]=0;
-        pq.add(new int[]{0,k});
-        while(!pq.isEmpty()){
-            int curr[]=pq.poll();
+        q.add(new int[]{k,0});
 
-            int wt=curr[0];
-            int u=curr[1];
+        while(!q.isEmpty()){
+            int curr[]=q.poll();
+            int u=curr[0];
+            int cost=curr[1];
 
-            if(wt>dist[u]) continue;
+            if(cost>dist[u]) continue;
 
-            for(int edge[]:adj.get(u)){
-                int neighcost=edge[0];
-                int neighnode=edge[1];
+            for(int next[]:adj.get(u)){
+                int v=next[0];
+                int newCost=cost+next[1];
 
-                if(wt+neighcost<dist[neighnode]){
-                    dist[neighnode]=wt+neighcost;
-                    pq.offer(new int[]{dist[neighnode],neighnode});
+                if(newCost<dist[v]){
+                    dist[v]=newCost;
+                    q.add(new int[]{v,newCost});
                 }
-
             }
         }
 
@@ -51,7 +46,5 @@ class Solution {
         }
 
         return max;
-
-
     }
 }
