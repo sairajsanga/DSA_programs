@@ -5,18 +5,15 @@ class Solution {
         int maxcount=0;
         for(char ch:tasks){
             count[ch-'A']++;
+            max=Math.max(max,count[ch-'A']); 
         }
-        for(int ele:count){
-            max=Math.max(max,ele);  
-        }
+        
+        int ans=(max-1)*(n+1);
         for(int ele:count){
             if(ele==max){
-                maxcount++;
+               ans++;
             }
-        }
-         
-        int ans=(max-1)*(n+1);
-        return Math.max(tasks.length,ans+maxcount);
-         
+        }  
+        return Math.max(ans,tasks.length);      
     }
 }
