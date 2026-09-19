@@ -18,18 +18,9 @@ class Solution {
                 if(isAnagram(count1,count2)){
                     list.add(i);
                 }
-            }
-
-            while(j-i+1>p.length()){
                 count1[s.charAt(i)-'a']--;
                 i++;
-                if(j-i+1==p.length()){
-                   if(isAnagram(count1,count2)){
-                    list.add(i);
-                   }
-                }
             }
-
             j++;
         }
         return list;
