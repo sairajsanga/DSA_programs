@@ -1,31 +1,23 @@
 class Solution {
-    int dp[][];
-    public int coinChange(int[] coins, int sum) {
-       int n=coins.length;
-       this.dp=new int[sum+1][n+1];
-       for(int arr[]:dp) Arrays.fill(arr,-1);
-       return helper(coins,sum,0)==Integer.MAX_VALUE/2?-1:helper(coins,sum,0);
+    Integer dp[][];
+    public int coinChange(int[] coins, int target) {
+        this.dp=new Integer[target+1][coins.length+1];
+        int ans=solve(coins,target,0);
+        return ans==Integer.MAX_VALUE/2?-1:ans;
     }
-
-    public int helper(int nums[],int sum,int start){
-
-        if(start>=nums.length||sum<0) return Integer.MAX_VALUE/2;
-        
-        if(sum==0) return 0;
-
-        if(dp[sum][start]!=-1) return dp[sum][start];
-        
-
-        int value=nums[start];
-
-        int take=1+helper(nums,sum-value,start);
-
-        int skip=helper(nums,sum,start+1);
-
-        
-        return dp[sum][start]=Math.min(take,skip);
-    }
+    public int solve(int nums[],int target,int idx){
+     
+     if(target==0) return 0;
+  
+     if(idx>=nums.length||target<0){
+         return Integer.MAX_VALUE/2;
+     }
+     
+     if(dp[target][idx]!=null) return dp[target][idx];
     
+     int take=1+solve(nums,target-nums[idx],idx);
+     int nottake=solve(nums,target,idx+1);
+
+     return dp[target][idx]=Math.min(take,nottake);
 }
-
-
+}
