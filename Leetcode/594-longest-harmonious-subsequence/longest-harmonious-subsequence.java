@@ -1,16 +1,21 @@
 class Solution {
     public int findLHS(int[] nums) {
-        HashMap<Integer, Integer> freq = new HashMap<>();
-        for(int num : nums) {
-            freq.put(num, freq.getOrDefault(num, 0) + 1);
+        int n=nums.length;
+        int i=0;
+        int j=0;
+        int max=0;
+        HashMap<Integer,Integer> map=new HashMap<>();
+        for(int ele:nums){
+            map.put(ele,map.getOrDefault(ele,0)+1);
+        }
+        while(j<n){
+            if(map.containsKey(nums[j]-1)){
+                int left=Math.max(map.getOrDefault(nums[j],0)+map.getOrDefault(nums[j]-1,0),max);
+                max=Math.max(max,left);
+            }
+            j++;
         }
 
-        int res = 0;
-        for(int num : freq.keySet()) {
-            if(freq.containsKey(num + 1)) 
-            res = Math.max(res, freq.get(num) + freq.get(num + 1));
-        }
-
-        return res;
+        return max;
     }
 }
